@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.self.name }}-cluster
+  namespace: argo-cd
+spec:
+  destination:
+    server: {{ .Values.cluster.argoServer }}
+    namespace: clusters
+  project: {{ .Release.Name }}
+  source:
+    repoURL: https://gitlab.miisy.me/devops/argocd/clusters/localhost.git
+    targetRevision: HEAD
+    path: .
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    automated:
+      prune: true
+      selfHeal: true

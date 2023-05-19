@@ -1,0 +1,32 @@
+{{- $values := .Values.core }}
+{{- range $path, $bytes := .Files.Glob "values/core/**" }}
+{{- $override_values := tpl ($.Files.Get $path) $ }}
+{{- $_ := mergeOverwrite $values (dict ($path | base | replace ($path | ext) "") (dict "values" (fromYaml $override_values))) }}
+{{- end }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.self.name }}-core
+  namespace: argo-cd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    server: {{ .Values.cluster.argoServer }}
+    namespace: applications
+  project: {{ .Release.Name }}
+  source:
+    repoURL: https://gitlab.miisy.me/devops/argocd/core-config.git
+    targetRevision: HEAD
+    path: .
+    helm:
+      values: |
+        cluster: {{ toYaml $.Values.cluster | trim | nindent 10 }}
+        core: {{ toYaml $values | nindent 10 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    automated:
+      prune: true
+      selfHeal: true

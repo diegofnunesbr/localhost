@@ -1,0 +1,23 @@
+## @section Cluster
+## @param cluster.argoServer URL that has the ArgoCD application deployed
+## @param cluster.spec.destination.server Cluster that will have all applications deployed to
+## @param cluster.self.name Cluster name that will be prefixed to all applications
+cluster:
+  argoServer: https://kubernetes.default.svc
+  spec:
+    destination:
+      server: https://kubernetes.default.svc
+  self:
+    name: localhost
+
+## @section Core
+## @param core [dict] Core Applications parameters
+core:
+  argo-cd:
+    enabled: true
+
+  ingress-nginx:
+    enabled: true
+
+  sealed-secrets:
+    enabled: true

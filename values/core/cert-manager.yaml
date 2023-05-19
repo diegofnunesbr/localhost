@@ -1,0 +1,7 @@
+email: erich.roveda@me.com.br
+
+cert-manager:
+  ingressShim:
+    defaultIssuerName: selfsigned
+    defaultIssuerKind: ClusterIssuer
+    defaultIssuerGroup: cert-manager.io

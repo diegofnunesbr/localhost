@@ -1,0 +1,15 @@
+kube-prometheus-stack:
+  grafana:
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - grafana.local
+
+    grafana.ini:
+      server:
+        root_url: http://grafana.local
+
+  prometheus-node-exporter:
+    hostRootFsMount: false

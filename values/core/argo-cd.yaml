@@ -1,0 +1,29 @@
+argo-cd:
+  configs:
+    cm:
+      url: http://argo-cd.local
+      admin.enabled: "false"
+
+      dex.config: |
+        connectors:
+          - type: gitlab
+            id: gitlab
+            name: ME GitLab
+            config:
+              baseURL: https://gitlab.miisy.me
+              clientID: 169f18b90b00f01ddb4890b86204d86197be1182079bd4a0b773d34efae816ef
+              clientSecret: e642a126ba90b84869cf6f2230126491b4da3ce5ad09d0cae8e5b23dc1f8b280
+              redirectURI: http://argo-cd.local/api/dex/callback
+              useLoginAsID: false
+    rbac:
+      policy.default: role:admin
+
+  server:
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      hosts:
+        - argo-cd.local
